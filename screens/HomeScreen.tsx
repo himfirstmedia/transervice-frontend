@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, Modal, FlatList } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import * as WebBrowser from 'expo-web-browser';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+
+  // Hide the header for this screen
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, [navigation]);
 
   const menuItems = [
     { title: 'About Us', action: () => navigation.navigate('About Us') },
@@ -22,8 +30,12 @@ const HomeScreen = () => {
   ];
 
   return (
-    <View style={{flex:1}}>
-      <ScrollView style={styles.container}>
+    <SafeAreaView style={{flex:1}}>
+      <ScrollView 
+        style={styles.container}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
       <Image source={require('../assets/logo.webp')} style={styles.logo} />
       
       <TouchableOpacity style={styles.button}>
@@ -124,7 +136,7 @@ const HomeScreen = () => {
         />
       </View>
     </Modal>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -132,8 +144,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  scrollContent: {
     padding: 15,
-    paddingBottom: 30,
+    paddingBottom: 50, // Increased bottom padding
   },
   logo: {
     width: '100%',

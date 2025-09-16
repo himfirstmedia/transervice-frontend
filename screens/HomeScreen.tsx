@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, Modal, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -20,6 +19,9 @@ interface MenuItem {
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+  const [historyCardPressed, setHistoryCardPressed] = useState(false);
+  const [awardsCardPressed, setAwardsCardPressed] = useState(false);
+  
   const [menuSections, setMenuSections] = useState<MenuSection[]>([
     {
       title: 'About',
@@ -170,11 +172,21 @@ const HomeScreen = () => {
       
       <Text style={styles.sectionHeading}>About Us</Text>
       <View style={styles.cardContainer}>
-        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('History')}>
+        <TouchableOpacity 
+          style={[styles.card, historyCardPressed && styles.cardPressed]} 
+          onPress={() => navigation.navigate('History')}
+          onPressIn={() => setHistoryCardPressed(true)}
+          onPressOut={() => setHistoryCardPressed(false)}
+        >
           <Image source={require('../assets/trade.png')} style={styles.cardImage} />
           <Text style={styles.cardText}>Company History</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Awards')}>
+        <TouchableOpacity 
+          style={[styles.card, awardsCardPressed && styles.cardPressed]} 
+          onPress={() => navigation.navigate('Awards')}
+          onPressIn={() => setAwardsCardPressed(true)}
+          onPressOut={() => setAwardsCardPressed(false)}
+        >
           <Image source={require('../assets/trophy.jpg')} style={styles.cardImage} />
           <Text style={styles.cardText}>Industry Recognition</Text>
         </TouchableOpacity>
@@ -209,7 +221,7 @@ const HomeScreen = () => {
       </TouchableOpacity>
       <TouchableOpacity style={styles.resourceCard} onPress={() => navigation.navigate('MaintenanceResource')}>
         <Image source={require('../assets/splashlogo.png')} style={styles.resourceImage} />
-        <Text style={styles.resourceText}>What is Dedicated Contract Maintenance</Text>
+        <Text ellipsizeMode="tail" numberOfLines={2}  style={styles.resourceText}>What is Dedicated Contract Maintenance</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.resourceCard} onPress={() => navigation.navigate('FullServiceLeasingResource')}>
         <Image source={require('../assets/splashlogo.png')} style={styles.resourceImage} />
@@ -332,6 +344,19 @@ const styles = StyleSheet.create({
     padding: 16,
     alignItems: 'center',
     width: '40%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  cardPressed: {
+    backgroundColor: '#f8f8f8',
+    elevation: 2,
+    shadowOpacity: 0.15,
+    transform: [{ scale: 0.98 }],
   },
   cardImage: {
     width: 60,
@@ -358,6 +383,8 @@ const styles = StyleSheet.create({
   },
   resourceText: {
     fontSize: 14,
+    flexWrap:'wrap',
+    flexShrink: 1, 
   },
   dropdownContainer: {
     backgroundColor: '#fff',

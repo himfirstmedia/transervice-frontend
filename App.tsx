@@ -1,20 +1,28 @@
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import HomeScreen from './screens/HomeScreen';
+import AboutUsScreen from './screens/AboutUsScreen';
+import TeamsScreen from './screens/TeamsScreen';
+
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarStyle: { backgroundColor: '#000' },
+          tabBarActiveTintColor: '#F4C914',
+          tabBarInactiveTintColor: '#fff',
+        }}
+      >
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="About Us" component={AboutUsScreen} />
+        <Tab.Screen name="Teams" component={TeamsScreen} />
+      </Tab.Navigator>
       <StatusBar style="auto" />
-    </View>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

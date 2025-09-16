@@ -1,20 +1,40 @@
-import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, Modal, FlatList } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import * as WebBrowser from 'expo-web-browser';
 
 const HomeScreen = () => {
+  const navigation = useNavigation();
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const menuItems = [
+    { title: 'About Us', action: () => navigation.navigate('About Us') },
+    { title: 'Company History', action: () => navigation.navigate('History') },
+    { title: 'Our Team', action: () => navigation.navigate('Teams') },
+    { title: 'Industry Recognition', action: () => navigation.navigate('Awards') },
+    { title: 'Contract Carrier', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/contract-carrier') },
+    { title: 'Contract Maintenance', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/contract-maintenance') },
+    { title: 'Full-Service Leasing', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/full-service-leasing') },
+    { title: 'Freight Management', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/freight-management') },
+    { title: 'Customer Service', action: () => navigation.navigate('ContactUs') },
+    { title: 'Careers', action: () => WebBrowser.openBrowserAsync('https://www.transervicecareers.com') },
+    { title: 'Insights', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/insights') },
+  ];
+
   return (
-    <ScrollView style={styles.container}>
+    <View style={{flex:1}}>
+      <ScrollView style={styles.container}>
       <Image source={require('../assets/logo.webp')} style={styles.logo} />
       
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Portal</Text>
       </TouchableOpacity>
       
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('ContactUs')}>
         <Text style={styles.buttonText}>Customer Service</Text>
       </TouchableOpacity>
       
-      <TouchableOpacity style={styles.menuButton}>
+      <TouchableOpacity style={styles.menuButton} onPress={() => setModalVisible(true)}>
         <Text style={styles.menuText}>☰ Page Menu</Text>
       </TouchableOpacity>
       
@@ -38,11 +58,11 @@ const HomeScreen = () => {
       
       <Text style={styles.sectionHeading}>About Us</Text>
       <View style={styles.cardContainer}>
-        <TouchableOpacity style={styles.card}>
+                <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('History')}>
           <Image source={require('../assets/logo.webp')} style={styles.cardImage} />
           <Text style={styles.cardText}>Company History</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.card}>
+                <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Awards')}>
           <Image source={require('../assets/logo.webp')} style={styles.cardImage} />
           <Text style={styles.cardText}>Industry Recognition</Text>
         </TouchableOpacity>
@@ -88,6 +108,23 @@ const HomeScreen = () => {
         <Text style={styles.resourceText}>What is Freight Management</Text>
       </TouchableOpacity>
     </ScrollView>
+    <Modal visible={modalVisible} animationType="slide" onRequestClose={() => setModalVisible(false)}>
+      <View style={styles.modalContainer}>
+        <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
+          <Text style={styles.closeText}>Close</Text>
+        </TouchableOpacity>
+        <FlatList
+          data={menuItems}
+          keyExtractor={(item) => item.title}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={styles.menuItem} onPress={() => { item.action(); setModalVisible(false); }}>
+              <Text style={styles.menuItemText}>{item.title}</Text>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
+    </Modal>
+    </View>
   );
 };
 
@@ -199,6 +236,27 @@ const styles = StyleSheet.create({
   },
   resourceText: {
     fontSize: 14,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingTop: 50,
+  },
+  closeButton: {
+    alignSelf: 'flex-end',
+    padding: 10,
+  },
+  closeText: {
+    fontSize: 18,
+    color: '#F4C914',
+  },
+  menuItem: {
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  menuItemText: {
+    fontSize: 16,
   },
 });
 

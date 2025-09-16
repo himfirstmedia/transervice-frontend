@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
 const HistoryScreen = () => {
@@ -22,7 +23,8 @@ const HistoryScreen = () => {
   ];
 
   return (
-    <ScrollView style={styles.container}>
+    <SafeAreaView style={{flex:1}}>
+      <ScrollView style={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <Text style={styles.backText}>Back</Text>
       </TouchableOpacity>
@@ -40,6 +42,7 @@ const HistoryScreen = () => {
         </View>
       ))}
     </ScrollView>
+    </SafeAreaView>
   );
 };
 

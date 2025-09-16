@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 
 const ContactUsScreen = () => {
@@ -15,7 +16,8 @@ const ContactUsScreen = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <SafeAreaView style={{flex:1}}>
+      <ScrollView style={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <Text style={styles.backText}>Back</Text>
       </TouchableOpacity>
@@ -75,6 +77,7 @@ const ContactUsScreen = () => {
         <Text>Map View</Text>
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 };
 

@@ -1,24 +1,93 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const AboutUsScreen = () => {
+  const navigation = useNavigation();
+
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Text style={styles.backText}>Back</Text>
+      </TouchableOpacity>
+      <Image source={require('../assets/about_img.webp')} style={styles.image} />
       <Text style={styles.title}>About Us</Text>
-      <Text>This is the About Us screen.</Text>
-    </View>
+      <Text style={styles.subtitle}>Over 50 years of innovative solutions</Text>
+      <Text style={styles.quote}>
+        "Our passion towards our customers' business and willingness to be flexible in our partnerships is transparent. We will always figure out a way to get to a yes."
+      </Text>
+      <Text style={styles.ceo}>-Gregg Nierenberg, CEO</Text>
+      <Text style={styles.text}>
+        For over 50 years, many of North America's leading companies have put their transportation needs and reputations in the hands of the trusted pros at Transervice.
+      </Text>
+      <Text style={styles.text}>
+        Based in Lake Success, New York, Transervice currently manages approximately 25,000 pieces of equipment in 135+ regional and local facilities across North America. Our workforce is some 1,200-strong, including over 1,000 drivers and technicians.
+      </Text>
+      <Text style={styles.missionTitle}>Mission statement</Text>
+      <Text style={styles.text}>
+        Our mission at Transervice is to provide our customers with professional services on the most cost-effective basis.
+      </Text>
+      <Text style={styles.text}>
+        Recognizing the significant contributions that come from the diversity of individuals and ideas, the knowledge, dedication, teamwork, and constant improvement of every employee is the foundation of our continued success.
+      </Text>
+      <Text style={styles.text}>
+        Together, we can grow, providing a better future for our customers and our company.
+      </Text>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 16,
+  },
+  backButton: {
+    alignSelf: 'flex-start',
+    marginBottom: 16,
+  },
+  backText: {
+    fontSize: 20,
+    color: '#F4C914',
+  },
+  image: {
+    width: '100%',
+    height: 200,
+    marginBottom: 16,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#000',
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 18,
+    color: '#000',
+    marginBottom: 8,
+  },
+  quote: {
+    fontStyle: 'italic',
+    color: '#666',
+    marginBottom: 8,
+  },
+  ceo: {
+    fontWeight: 'bold',
+    color: '#000',
+    marginBottom: 16,
+  },
+  text: {
+    color: '#000',
+    marginBottom: 8,
+    lineHeight: 20,
+  },
+  missionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#000',
+    marginTop: 16,
+    marginBottom: 8,
   },
 });
 

@@ -21,7 +21,6 @@ function TabNavigator() {
           tabBarStyle: { backgroundColor: '#000' },
           tabBarActiveTintColor: '#F4C914',
           tabBarInactiveTintColor: '#fff',
-          tabBarShowLabel: false,
         }}
       >
         <Tab.Screen
@@ -29,7 +28,7 @@ function TabNavigator() {
           component={HomeScreen}
           options={{
             tabBarIcon: ({ color, size }) => <Ionicons name="home" color={color} size={size} />,
-            tabBarLabel: '',
+            tabBarLabel: 'Home',
           }}
         />
         <Tab.Screen
@@ -37,7 +36,7 @@ function TabNavigator() {
           component={AboutUsScreen}
           options={{
             tabBarIcon: ({ color, size }) => <Ionicons name="information-circle" color={color} size={size} />,
-            tabBarLabel: '',
+            tabBarLabel: 'About Us',
           }}
         />
         <Tab.Screen
@@ -45,7 +44,7 @@ function TabNavigator() {
           component={TeamsScreen}
           options={{
             tabBarIcon: ({ color, size }) => <Ionicons name="people" color={color} size={size} />,
-            tabBarLabel: '',
+            tabBarLabel: 'Our Team',
           }}
         />
       </Tab.Navigator>

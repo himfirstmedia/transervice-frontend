@@ -133,10 +133,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 15,
+    paddingBottom: 30,
   },
   logo: {
     width: '100%',
-    height: 100,
+    height: 80,
+    resizeMode: 'contain',
   },
   button: {
     backgroundColor: '#F4C914',

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 const ContactUsScreen = () => {
   const navigation = useNavigation();
@@ -10,91 +11,122 @@ const ContactUsScreen = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 
+  // Hide the header for this screen
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: false,
+    });
+  }, [navigation]);
+
   const handleSend = () => {
     Alert.alert('Message Sent', 'Thank you for contacting us!');
     // Here you can add logic to send the message
   };
 
   return (
-    <SafeAreaView style={{flex:1}}>
-      <ScrollView style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Text style={styles.backText}>Back</Text>
-      </TouchableOpacity>
-      <Text style={styles.title}>Fill out the form below to contact us</Text>
-      
-      <TextInput
-        style={styles.input}
-        placeholder="Name"
-        value={name}
-        onChangeText={setName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Phone"
-        value={phone}
-        onChangeText={setPhone}
-        keyboardType="phone-pad"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={[styles.input, styles.messageInput]}
-        placeholder="Message"
-        value={message}
-        onChangeText={setMessage}
-        multiline
-        numberOfLines={4}
-      />
-      
-      <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
-        <Text style={styles.sendButtonText}>Send Message</Text>
-      </TouchableOpacity>
-      
-      <Text style={styles.sectionTitle}>Contact Details</Text>
-      
-      <View style={styles.contactCard}>
-        <Text style={styles.contactTitle}>Customer Service</Text>
-        <Text style={styles.contactInfo}>866.631.0445</Text>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="#000" />
+          <Text style={styles.backText}>Back</Text>
+        </TouchableOpacity>
       </View>
       
-      <View style={styles.contactCard}>
-        <Text style={styles.contactTitle}>Email</Text>
-        <Text style={styles.contactInfo}>inquiry@transervice.com</Text>
+      <View style={styles.scrollWrapper}>
+        <ScrollView style={styles.container}>
+          <View style={styles.contentContainer}>
+            <Text style={styles.title}>Fill out the form below to contact us</Text>
+                  
+            <TextInput
+              style={styles.input}
+              placeholder="Name"
+              value={name}
+              onChangeText={setName}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Phone"
+              value={phone}
+              onChangeText={setPhone}
+              keyboardType="phone-pad"
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+            />
+            <TextInput
+              style={[styles.input, styles.messageInput]}
+              placeholder="Message"
+              value={message}
+              onChangeText={setMessage}
+              multiline
+              numberOfLines={4}
+            />
+                  
+            <TouchableOpacity style={styles.sendButton} onPress={handleSend}>
+              <Text style={styles.sendButtonText}>Send Message</Text>
+            </TouchableOpacity>
+                  
+            <Text style={styles.sectionTitle}>Contact Details</Text>
+                  
+            <View style={styles.contactCard}>
+              <Text style={styles.contactTitle}>Customer Service</Text>
+              <Text style={styles.contactInfo}>866.631.0445</Text>
+            </View>
+                  
+            <View style={styles.contactCard}>
+              <Text style={styles.contactTitle}>Email</Text>
+              <Text style={styles.contactInfo}>inquiry@transervice.com</Text>
+            </View>
+                  
+            <View style={styles.contactCard}>
+              <Text style={styles.contactTitle}>Location</Text>
+              <Text style={styles.contactInfo}>5 Dakota Dr, Lake Success, NY 11042</Text>
+            </View>
+                  
+            <View style={styles.mapPlaceholder}>
+              <Text>Map View</Text>
+            </View>
+          </View>
+        </ScrollView>
       </View>
-      
-      <View style={styles.contactCard}>
-        <Text style={styles.contactTitle}>Location</Text>
-        <Text style={styles.contactInfo}>5 Dakota Dr, Lake Success, NY 11042</Text>
-      </View>
-      
-      <View style={styles.mapPlaceholder}>
-        <Text>Map View</Text>
-      </View>
-    </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  safeArea: {
     flex: 1,
-    backgroundColor: '#fff',
-    padding: 16,
+    backgroundColor: '#F4C914',
+  },
+  header: {
+    backgroundColor: '#F4C914',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
   },
   backText: {
-    fontSize: 20,
-    color: '#F4C914',
+    fontSize: 25,
+    color: '#000',
+    marginLeft: 8,
+  },
+  scrollWrapper: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  container: {
+    flex: 1,
+  },
+  contentContainer: {
+    padding: 16,
   },
   title: {
     fontSize: 20,
@@ -150,6 +182,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     margin: 10,
     borderRadius: 16,
+    marginBottom: 40,
   },
 });
 

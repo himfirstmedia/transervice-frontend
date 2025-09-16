@@ -10,6 +10,10 @@ import TeamsScreen from './screens/TeamsScreen';
 import HistoryScreen from './screens/HistoryScreen';
 import AwardsScreen from './screens/AwardsScreen';
 import ContactUsScreen from './screens/ContactUsScreen';
+import CarriageResourceScreen from './screens/resources/CarriageResourceScreen';
+import MaintenanceResourceScreen from './screens/resources/MaintenanceResourceScreen';
+import FullServiceLeasingResourceScreen from './screens/resources/FullServiceLeasingResourceScreen';
+import FreightResourceScreen from './screens/resources/FreightResourceScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -59,6 +63,10 @@ export default function App() {
         <Stack.Screen name="History" component={HistoryScreen} />
         <Stack.Screen name="Awards" component={AwardsScreen} />
         <Stack.Screen name="ContactUs" component={ContactUsScreen} />
+        <Stack.Screen name="CarriageResource" component={CarriageResourceScreen} />
+        <Stack.Screen name="MaintenanceResource" component={MaintenanceResourceScreen} />
+        <Stack.Screen name="FullServiceLeasingResource" component={FullServiceLeasingResourceScreen} />
+        <Stack.Screen name="FreightResource" component={FreightResourceScreen} />
       </Stack.Navigator>
       <StatusBar style="dark" backgroundColor="#F4C914" />
     </NavigationContainer>

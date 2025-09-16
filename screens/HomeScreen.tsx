@@ -1,12 +1,62 @@
+
 import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, Modal, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import * as WebBrowser from 'expo-web-browser';
+import { Ionicons } from '@expo/vector-icons';
+
+interface MenuSection {
+  title: string;
+  items: MenuItem[];
+  isExpanded: boolean;
+}
+
+interface MenuItem {
+  title: string;
+  action: () => void;
+}
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+  const [menuSections, setMenuSections] = useState<MenuSection[]>([
+    {
+      title: 'About',
+      isExpanded: false,
+      items: [
+        { title: 'About Us', action: () => navigation.navigate('About Us') },
+        { title: 'Company History', action: () => navigation.navigate('History') },
+        { title: 'Our Team', action: () => navigation.navigate('Teams') },
+        { title: 'Industry Recognition', action: () => navigation.navigate('Awards') },
+      ]
+    },
+    {
+      title: 'Services',
+      isExpanded: false,
+      items: [
+        { title: 'Dedicated Contract Carriage', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/contract-carrier') },
+        { title: 'Contract Maintenance', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/contract-maintenance') },
+        { title: 'Full-Service Leasing', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/full-service-leasing') },
+        { title: 'Freight Management', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/freight-management') },
+      ]
+    },
+    {
+      title: 'Insights',
+      isExpanded: true,
+      items: [
+        { title: 'Insights', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/insights') },
+        { title: 'Customer Spotlights', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/customer-spotlights') },
+      ]
+    }
+  ]);
+
+  // Add individual menu items that are not part of sections
+  const individualMenuItems = [
+    { title: 'Careers', action: () => WebBrowser.openBrowserAsync('https://www.transervicecareers.com') },
+    { title: 'Contact', action: () => navigation.navigate('ContactUs') },
+    { title: 'Freight Tracking', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/freight-tracking') },
+  ];
 
   // Hide the header for this screen
   React.useLayoutEffect(() => {
@@ -15,19 +65,19 @@ const HomeScreen = () => {
     });
   }, [navigation]);
 
-  const menuItems = [
-    { title: 'About Us', action: () => navigation.navigate('About Us') },
-    { title: 'Company History', action: () => navigation.navigate('History') },
-    { title: 'Our Team', action: () => navigation.navigate('Teams') },
-    { title: 'Industry Recognition', action: () => navigation.navigate('Awards') },
-    { title: 'Contract Carrier', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/contract-carrier') },
-    { title: 'Contract Maintenance', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/contract-maintenance') },
-    { title: 'Full-Service Leasing', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/full-service-leasing') },
-    { title: 'Freight Management', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/freight-management') },
-    { title: 'Customer Service', action: () => navigation.navigate('ContactUs') },
-    { title: 'Careers', action: () => WebBrowser.openBrowserAsync('https://www.transervicecareers.com') },
-    { title: 'Insights', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/insights') },
-  ];
+  const toggleSection = (sectionIndex: number) => {
+    const updatedSections = menuSections.map((section, index) => 
+      index === sectionIndex 
+        ? { ...section, isExpanded: !section.isExpanded }
+        : section
+    );
+    setMenuSections(updatedSections);
+  };
+
+  const handleMenuItemPress = (action: () => void) => {
+    action();
+    setModalVisible(false);
+  };
 
   return (
     <SafeAreaView style={{flex:1}}>
@@ -46,9 +96,53 @@ const HomeScreen = () => {
         <Text style={styles.buttonText}>Customer Service</Text>
       </TouchableOpacity>
       
-      <TouchableOpacity style={styles.menuButton} onPress={() => setModalVisible(true)}>
-        <Text style={styles.menuText}>☰ Page Menu</Text>
+      <TouchableOpacity style={styles.menuButton} onPress={() => setModalVisible(!modalVisible)}>
+        <Ionicons name="menu" size={20} color="#000" style={styles.menuIcon} />
+        <Text style={styles.menuText}>Page Menu</Text>
       </TouchableOpacity>
+      
+      {modalVisible && (
+        <View style={styles.dropdownContainer}>
+          {menuSections.map((section, index) => (
+            <View key={index} style={styles.menuSection}>
+              <TouchableOpacity
+                style={styles.menuSectionHeader}
+                onPress={() => toggleSection(index)}
+              >
+                <Text style={styles.menuSectionTitle}>{section.title}</Text>
+                <Ionicons
+                  name={section.isExpanded ? "close" : "add"}
+                  size={20}
+                  color="#666"
+                />
+              </TouchableOpacity>
+        
+              {section.isExpanded && (
+                <View style={styles.menuSectionContent}>
+                  {section.items.map((menuItem, itemIndex) => (
+                    <TouchableOpacity
+                      key={itemIndex}
+                      style={styles.menuItem}
+                      onPress={() => handleMenuItemPress(menuItem.action)}
+                    >
+                      <Text style={styles.menuItemText}>{menuItem.title}</Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+            </View>
+          ))}
+          {individualMenuItems.map((item, index) => (
+            <TouchableOpacity
+              key={`individual-${index}`}
+              style={styles.individualMenuItem}
+              onPress={() => handleMenuItemPress(item.action)}
+            >
+              <Text style={styles.individualMenuItemText}>{item.title}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
       
       <View style={styles.overlayContainer}>
         <Image source={require('../assets/back.jpg')} style={styles.backgroundImage} />
@@ -63,19 +157,25 @@ const HomeScreen = () => {
       </Text>
       
       <View style={styles.stats}>
-        <Text>Locations Across North America: 135+</Text>
-        <Text>Dedicated Employees: 1200+</Text>
-        <Text>Managed Units: 25,000+</Text>
+        <Text style={styles.statText}>
+          Locations Across North America: <Text style={styles.statNumber}>135+</Text>
+        </Text>
+        <Text style={styles.statText}>
+          Dedicated Employees: <Text style={styles.statNumber}>1200+</Text>
+        </Text>
+        <Text style={styles.statText}>
+          Managed Units: <Text style={styles.statNumber}>25,000+</Text>
+        </Text>
       </View>
       
       <Text style={styles.sectionHeading}>About Us</Text>
       <View style={styles.cardContainer}>
-                <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('History')}>
-          <Image source={require('../assets/logo.webp')} style={styles.cardImage} />
+        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('History')}>
+          <Image source={require('../assets/trade.png')} style={styles.cardImage} />
           <Text style={styles.cardText}>Company History</Text>
         </TouchableOpacity>
-                <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Awards')}>
-          <Image source={require('../assets/logo.webp')} style={styles.cardImage} />
+        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Awards')}>
+          <Image source={require('../assets/trophy.jpg')} style={styles.cardImage} />
           <Text style={styles.cardText}>Industry Recognition</Text>
         </TouchableOpacity>
       </View>
@@ -87,55 +187,39 @@ const HomeScreen = () => {
           <Text style={styles.cardText}>Contract Carrier</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.card}>
-          <Image source={require('../assets/carri.png')} style={styles.cardImage} />
+          <Image source={require('../assets/contm.png')} style={styles.cardImage} />
           <Text style={styles.cardText}>Contract Maintenance</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.cardContainer}>
         <TouchableOpacity style={styles.card}>
-          <Image source={require('../assets/carri.png')} style={styles.cardImage} />
+          <Image source={require('../assets/full.png')} style={styles.cardImage} />
           <Text style={styles.cardText}>Full-Service Leasing</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.card}>
-          <Image source={require('../assets/carri.png')} style={styles.cardImage} />
+          <Image source={require('../assets/frieght.png')} style={styles.cardImage} />
           <Text style={styles.cardText}>Freight Management</Text>
         </TouchableOpacity>
       </View>
       
       <Text style={styles.sectionHeading}>Resources</Text>
-      <TouchableOpacity style={styles.resourceCard}>
+      <TouchableOpacity style={styles.resourceCard} onPress={() => navigation.navigate('CarriageResource')}>
         <Image source={require('../assets/splashlogo.png')} style={styles.resourceImage} />
         <Text style={styles.resourceText}>What is Dedicated Contract Carriage</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.resourceCard}>
+      <TouchableOpacity style={styles.resourceCard} onPress={() => navigation.navigate('MaintenanceResource')}>
         <Image source={require('../assets/splashlogo.png')} style={styles.resourceImage} />
         <Text style={styles.resourceText}>What is Dedicated Contract Maintenance</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.resourceCard}>
+      <TouchableOpacity style={styles.resourceCard} onPress={() => navigation.navigate('FullServiceLeasingResource')}>
         <Image source={require('../assets/splashlogo.png')} style={styles.resourceImage} />
         <Text style={styles.resourceText}>What is Full-Service Leasing</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.resourceCard}>
+      <TouchableOpacity style={styles.resourceCard} onPress={() => navigation.navigate('FreightResource')}>
         <Image source={require('../assets/splashlogo.png')} style={styles.resourceImage} />
         <Text style={styles.resourceText}>What is Freight Management</Text>
       </TouchableOpacity>
     </ScrollView>
-    <Modal visible={modalVisible} animationType="slide" onRequestClose={() => setModalVisible(false)}>
-      <View style={styles.modalContainer}>
-        <TouchableOpacity style={styles.closeButton} onPress={() => setModalVisible(false)}>
-          <Text style={styles.closeText}>Close</Text>
-        </TouchableOpacity>
-        <FlatList
-          data={menuItems}
-          keyExtractor={(item) => item.title}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.menuItem} onPress={() => { item.action(); setModalVisible(false); }}>
-              <Text style={styles.menuItemText}>{item.title}</Text>
-            </TouchableOpacity>
-          )}
-        />
-      </View>
-    </Modal>
     </SafeAreaView>
   );
 };
@@ -147,7 +231,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 15,
-    paddingBottom: 50, // Increased bottom padding
+    paddingBottom: 1,
   },
   logo: {
     width: '100%',
@@ -166,13 +250,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   menuButton: {
-    backgroundColor: '#ddd',
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#000',
     padding: 10,
     marginTop: 10,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  menuIcon: {
+    marginRight: 8,
   },
   menuText: {
     fontSize: 18,
+    color: '#000',
   },
   overlayContainer: {
     height: 250,
@@ -207,6 +299,20 @@ const styles = StyleSheet.create({
   },
   stats: {
     padding: 20,
+  },
+  statText: {
+    fontSize: 16,
+    marginBottom: 8,
+    color: '#333',
+    fontWeight:'bold',
+    paddingRight:10
+  },
+  statNumber: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#F4C914',
+    paddingLeft:20,
+    
   },
   sectionHeading: {
     fontSize: 24,
@@ -253,26 +359,63 @@ const styles = StyleSheet.create({
   resourceText: {
     fontSize: 14,
   },
-  modalContainer: {
-    flex: 1,
+  dropdownContainer: {
     backgroundColor: '#fff',
-    paddingTop: 50,
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 0,
+    marginTop: 0,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    zIndex: 1000,
   },
-  closeButton: {
-    alignSelf: 'flex-end',
-    padding: 10,
+  menuSection: {
+    marginBottom: 8,
   },
-  closeText: {
-    fontSize: 18,
-    color: '#F4C914',
+  menuSectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 15,
+    backgroundColor: '#f8f8f8',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ddd',
+  },
+  menuSectionTitle: {
+    fontSize: 16,
+    color: '#000',
+    textAlign: 'left',
+  },
+  menuSectionContent: {
+    backgroundColor: '#fff',
   },
   menuItem: {
     padding: 15,
+    paddingLeft: 30,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: '#eee',
   },
   menuItemText: {
+    fontSize: 14,
+    color: '#333',
+    textAlign: 'left',
+  },
+  individualMenuItem: {
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    backgroundColor: '#fff',
+  },
+  individualMenuItemText: {
     fontSize: 16,
+    color: '#000',
+    textAlign: 'left',
   },
 });
 

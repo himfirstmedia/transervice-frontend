@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, Modal, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import * as WebBrowser from 'expo-web-browser';
+
 import { Ionicons } from '@expo/vector-icons';
 
 interface MenuSection {
@@ -37,27 +37,27 @@ const HomeScreen = () => {
       title: 'Services',
       isExpanded: false,
       items: [
-        { title: 'Dedicated Contract Carriage', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/contract-carrier') },
-        { title: 'Contract Maintenance', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/contract-maintenance') },
-        { title: 'Full-Service Leasing', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/full-service-leasing') },
-        { title: 'Freight Management', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/freight-management') },
+        { title: 'Dedicated Contract Carriage', action: () => navigation.navigate('Webview', { uri: 'https://www.transervice.com/contract-carrier' }) },
+        { title: 'Contract Maintenance', action: () => navigation.navigate('Webview', { uri: 'https://www.transervice.com/contract-maintenance' }) },
+        { title: 'Full-Service Leasing', action: () => navigation.navigate('Webview', { uri: 'https://www.transervice.com/full-service-leasing' }) },
+        { title: 'Freight Management', action: () => navigation.navigate('Webview', { uri: 'https://www.transervice.com/freight-management' }) },
       ]
     },
     {
       title: 'Insights',
       isExpanded: true,
       items: [
-        { title: 'Insights', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/insights') },
-        { title: 'Customer Spotlights', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/customer-spotlights') },
+        { title: 'Insights', action: () => navigation.navigate('Webview', { uri: 'https://www.transervice.com/insights' }) },
+        { title: 'Customer Spotlights', action: () => navigation.navigate('Webview', { uri: 'https://www.transervice.com/customer-spotlights' }) },
       ]
     }
   ]);
 
   // Add individual menu items that are not part of sections
   const individualMenuItems = [
-    { title: 'Careers', action: () => WebBrowser.openBrowserAsync('https://www.transervicecareers.com') },
+    { title: 'Careers', action: () => navigation.navigate('Webview', { uri: 'https://www.transervicecareers.com' }) },
     { title: 'Contact', action: () => navigation.navigate('ContactUs') },
-    { title: 'Freight Tracking', action: () => WebBrowser.openBrowserAsync('https://www.transervice.com/freight-tracking') },
+    { title: 'Freight Tracking', action: () => navigation.navigate('Webview', { uri: 'https://www.transervice.com/freight-tracking' }) },
   ];
 
   // Hide the header for this screen
@@ -90,7 +90,7 @@ const HomeScreen = () => {
       >
       <Image source={require('../assets/logo.webp')} style={styles.logo} />
       
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Webview', { uri: 'https://portal.transervice.com' })}>
         <Text style={styles.buttonText}>Portal</Text>
       </TouchableOpacity>
       

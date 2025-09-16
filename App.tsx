@@ -14,6 +14,7 @@ import CarriageResourceScreen from './screens/resources/CarriageResourceScreen';
 import MaintenanceResourceScreen from './screens/resources/MaintenanceResourceScreen';
 import FullServiceLeasingResourceScreen from './screens/resources/FullServiceLeasingResourceScreen';
 import FreightResourceScreen from './screens/resources/FreightResourceScreen';
+import WebviewScreen from './screens/WebviewScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -67,6 +68,7 @@ export default function App() {
         <Stack.Screen name="MaintenanceResource" component={MaintenanceResourceScreen} />
         <Stack.Screen name="FullServiceLeasingResource" component={FullServiceLeasingResourceScreen} />
         <Stack.Screen name="FreightResource" component={FreightResourceScreen} />
+        <Stack.Screen name="Webview" component={WebviewScreen} options={{ headerShown: true, headerTitle: 'Portal', headerStyle: {backgroundColor: '#F4C914'}, headerTintColor: '#000' }} />
       </Stack.Navigator>
       <StatusBar style="dark" backgroundColor="#F4C914" />
     </NavigationContainer>

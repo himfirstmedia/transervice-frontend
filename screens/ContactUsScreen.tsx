@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Alert, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import MapView, { Marker } from 'react-native-maps';
 
 const ContactUsScreen = () => {
   const navigation = useNavigation();
@@ -11,6 +12,14 @@ const ContactUsScreen = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 
+  // Coordinates for Lake Success, NY office
+  const officeLocation = {
+    latitude: 40.7736,
+    longitude: -73.7192,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.01,
+  };
+
   // Hide the header for this screen
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -18,9 +27,48 @@ const ContactUsScreen = () => {
     });
   }, [navigation]);
 
-  const handleSend = () => {
-    Alert.alert('Message Sent', 'Thank you for contacting us!');
-    // Here you can add logic to send the message
+  const handleSend = async () => {
+    if (!name.trim() || !email.trim() || !message.trim()) {
+      Alert.alert('Error', 'Please fill in all required fields');
+      return;
+    }
+
+    const formData = new URLSearchParams();
+    formData.append('name', name);
+    formData.append('phone', phone);
+    formData.append('email', email);
+    formData.append('message', message);
+
+    try {
+      const response = await fetch('https://himfirstapps.com/Transervice-App/contact.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: formData.toString(),
+      });
+
+      if (response.ok) {
+        Alert.alert('Message Sent', 'Thank you for contacting us!');
+        // Clear form after sending
+        setName('');
+        setPhone('');
+        setEmail('');
+        setMessage('');
+      } else {
+        const errorText = await response.text();
+        Alert.alert('Error', `Failed to send message: ${errorText || 'Server error'}`);
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error', 'An unexpected error occurred while sending the message.');
+    }
+  };
+
+  const openInMaps = () => {
+    const address = '5 Dakota Dr, Lake Success, NY 11042';
+    const url = `https://maps.google.com/?q=${encodeURIComponent(address)}`;
+    Linking.openURL(url);
   };
 
   return (
@@ -33,13 +81,13 @@ const ContactUsScreen = () => {
       </View>
       
       <View style={styles.scrollWrapper}>
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
           <View style={styles.contentContainer}>
             <Text style={styles.title}>Fill out the form below to contact us</Text>
                   
             <TextInput
               style={styles.input}
-              placeholder="Name"
+              placeholder="Name *"
               value={name}
               onChangeText={setName}
             />
@@ -52,14 +100,15 @@ const ContactUsScreen = () => {
             />
             <TextInput
               style={styles.input}
-              placeholder="Email"
+              placeholder="Email *"
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
+              autoCapitalize="none"
             />
             <TextInput
               style={[styles.input, styles.messageInput]}
-              placeholder="Message"
+              placeholder="Message *"
               value={message}
               onChangeText={setMessage}
               multiline
@@ -73,22 +122,61 @@ const ContactUsScreen = () => {
             <Text style={styles.sectionTitle}>Contact Details</Text>
                   
             <View style={styles.contactCard}>
-              <Text style={styles.contactTitle}>Customer Service</Text>
-              <Text style={styles.contactInfo}>866.631.0445</Text>
+              <View style={styles.contactHeader}>
+                <Ionicons name="call" size={20} color="#F4C914" style={styles.contactIcon} />
+                <Text style={styles.contactTitle}>Customer Service</Text>
+              </View>
+              <TouchableOpacity onPress={() => Linking.openURL('tel:8666310445')}>
+                <Text style={[styles.contactInfo, styles.linkText]}>866.631.0445</Text>
+              </TouchableOpacity>
             </View>
                   
             <View style={styles.contactCard}>
-              <Text style={styles.contactTitle}>Email</Text>
-              <Text style={styles.contactInfo}>inquiry@transervice.com</Text>
+              <View style={styles.contactHeader}>
+                <Ionicons name="mail" size={20} color="#F4C914" style={styles.contactIcon} />
+                <Text style={styles.contactTitle}>Email</Text>
+              </View>
+              <TouchableOpacity onPress={() => Linking.openURL('mailto:inquiry@transervice.com')}>
+                <Text style={[styles.contactInfo, styles.linkText]}>inquiry@transervice.com</Text>
+              </TouchableOpacity>
             </View>
                   
             <View style={styles.contactCard}>
-              <Text style={styles.contactTitle}>Location</Text>
-              <Text style={styles.contactInfo}>5 Dakota Dr, Lake Success, NY 11042</Text>
+              <View style={styles.contactHeader}>
+                <Ionicons name="location" size={20} color="#F4C914" style={styles.contactIcon} />
+                <Text style={styles.contactTitle}>Location</Text>
+              </View>
+              <TouchableOpacity onPress={openInMaps}>
+                <Text style={[styles.contactInfo, styles.linkText]}>5 Dakota Dr, Lake Success, NY 11042</Text>
+              </TouchableOpacity>
             </View>
                   
-            <View style={styles.mapPlaceholder}>
-              <Text>Map View</Text>
+            <View style={styles.mapContainer}>
+              <MapView
+                style={styles.map}
+                initialRegion={officeLocation}
+                showsUserLocation={false}
+                showsMyLocationButton={false}
+                zoomEnabled={true}
+                scrollEnabled={true}
+                pitchEnabled={false}
+                rotateEnabled={false}
+              >
+                <Marker
+                  coordinate={{
+                    latitude: officeLocation.latitude,
+                    longitude: officeLocation.longitude,
+                  }}
+                  title="Transervice Office"
+                  description="5 Dakota Dr, Lake Success, NY 11042"
+                />
+              </MapView>
+              <TouchableOpacity style={styles.mapOverlay} onPress={openInMaps}>
+                <View style={styles.mapButton}>
+                  <Ionicons name="navigate-outline" size={20} color="#F4C914" />
+                  <Text style={styles.mapButtonText}>Open in Maps</Text>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
         </ScrollView>
@@ -139,6 +227,7 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 10,
     borderRadius: 5,
+    fontSize: 16,
   },
   messageInput: {
     height: 100,
@@ -154,6 +243,7 @@ const styles = StyleSheet.create({
   sendButtonText: {
     color: '#000',
     fontSize: 16,
+    fontWeight: 'bold',
   },
   sectionTitle: {
     fontSize: 24,
@@ -167,6 +257,14 @@ const styles = StyleSheet.create({
     margin: 10,
     borderRadius: 12,
   },
+  contactHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  contactIcon: {
+    marginRight: 12,
+  },
   contactTitle: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -174,15 +272,42 @@ const styles = StyleSheet.create({
   contactInfo: {
     fontSize: 16,
     marginTop: 4,
+    marginLeft: 32,
   },
-  mapPlaceholder: {
+  linkText: {
+    color: '#007AFF',
+    textDecorationLine: 'underline',
+  },
+  mapContainer: {
     height: 250,
-    backgroundColor: '#ddd',
-    justifyContent: 'center',
-    alignItems: 'center',
     margin: 10,
     borderRadius: 16,
     marginBottom: 40,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  map: {
+    width: '100%',
+    height: '100%',
+  },
+  mapOverlay: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  mapButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  mapButtonText: {
+    marginLeft: 5,
+    color: '#000',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
 });
 

@@ -15,6 +15,11 @@ import MaintenanceResourceScreen from './screens/resources/MaintenanceResourceSc
 import FullServiceLeasingResourceScreen from './screens/resources/FullServiceLeasingResourceScreen';
 import FreightResourceScreen from './screens/resources/FreightResourceScreen';
 import WebviewScreen from './screens/WebviewScreen';
+import SplashScreen from './screens/SplashScreen';
+import ContractCarrierScreen from './screens/services/ContractCarrierScreen';
+import ContractMaintenanceScreen from './screens/services/ContractMaintenanceScreen';
+import FullServiceLeasingScreen from './screens/services/FullServiceLeasingScreen';
+import FreightManagementScreen from './screens/services/FreightManagementScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -59,7 +64,8 @@ function TabNavigator() {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="Main" component={TabNavigator} />
         <Stack.Screen name="History" component={HistoryScreen} />
         <Stack.Screen name="Awards" component={AwardsScreen} />
@@ -68,6 +74,10 @@ export default function App() {
         <Stack.Screen name="MaintenanceResource" component={MaintenanceResourceScreen} />
         <Stack.Screen name="FullServiceLeasingResource" component={FullServiceLeasingResourceScreen} />
         <Stack.Screen name="FreightResource" component={FreightResourceScreen} />
+        <Stack.Screen name="ContractCarrier" component={ContractCarrierScreen} />
+        <Stack.Screen name="ContractMaintenance" component={ContractMaintenanceScreen} />
+        <Stack.Screen name="FullServiceLeasing" component={FullServiceLeasingScreen} />
+        <Stack.Screen name="FreightManagement" component={FreightManagementScreen} />
         <Stack.Screen name="Webview" component={WebviewScreen} options={{ headerShown: true, headerTitle: 'Portal', headerStyle: {backgroundColor: '#F4C914'}, headerTintColor: '#000' }} />
       </Stack.Navigator>
       <StatusBar style="dark" backgroundColor="#F4C914" />

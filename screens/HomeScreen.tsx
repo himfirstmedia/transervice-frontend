@@ -194,21 +194,21 @@ const HomeScreen = () => {
       
       <Text style={styles.sectionHeading}>Our Services</Text>
       <View style={styles.cardContainer}>
-        <TouchableOpacity style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('ContractCarrier')}>
           <Image source={require('../assets/carri.png')} style={styles.cardImage} />
           <Text style={styles.cardText}>Contract Carrier</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('ContractMaintenance')}>
           <Image source={require('../assets/contm.png')} style={styles.cardImage} />
           <Text style={styles.cardText}>Contract Maintenance</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.cardContainer}>
-        <TouchableOpacity style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('FullServiceLeasing')}>
           <Image source={require('../assets/full.png')} style={styles.cardImage} />
           <Text style={styles.cardText}>Full-Service Leasing</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('FreightManagement')}>
           <Image source={require('../assets/frieght.png')} style={styles.cardImage} />
           <Text style={styles.cardText}>Freight Management</Text>
         </TouchableOpacity>
